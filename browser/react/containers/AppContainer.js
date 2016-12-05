@@ -11,6 +11,9 @@ import Player from '../components/Player';
 
 import { convertAlbum, convertAlbums, convertSong, skip } from '../utils';
 
+import { hashHistory } from 'react-router';
+
+
 export default class AppContainer extends Component {
 
   constructor (props) {
@@ -24,6 +27,7 @@ export default class AppContainer extends Component {
     this.selectAlbum = this.selectAlbum.bind(this);
     this.selectArtist = this.selectArtist.bind(this);
     this.addPlaylist = this.addPlaylist.bind(this);
+    this.selectPlaylist = this.selectPlaylist.bind(this);
   }
 
   componentDidMount () {
@@ -31,7 +35,8 @@ export default class AppContainer extends Component {
     Promise
       .all([
         axios.get('/api/albums/'),
-        axios.get('/api/artists/')
+        axios.get('/api/artists/'),
+        axios.get('/api/playlists')
       ])
       .then(res => res.map(r => r.data))
       .then(data => this.onLoad(...data));
@@ -42,10 +47,11 @@ export default class AppContainer extends Component {
       this.setProgress(AUDIO.currentTime / AUDIO.duration));
   }
 
-  onLoad (albums, artists) {
+  onLoad (albums, artists, playlistArray) {
     this.setState({
       albums: convertAlbums(albums),
-      artists: artists
+      artists: artists,
+      playlistArray: playlistArray
     });
   }
 
@@ -128,8 +134,21 @@ export default class AppContainer extends Component {
   addPlaylist (playlist) {
     this.setState({
       playlistArray: this.state.playlistArray.concat(playlist)
-    }
-  )}
+    })
+    const path = `/playlists/${playlist.id}/`
+    hashHistory.push(path)
+  }
+
+  selectPlaylist (playlistId) {
+    axios.get(`/api/playlists/${playlistId}`)
+      .then(res => res.data)
+      .then(playlist => {
+        playlist.songs = playlist.songs.map(convertSong);
+        this.setState({
+          selectedPlaylist: playlist
+        });
+      });
+  }
 
   render () {
 
@@ -139,13 +158,17 @@ export default class AppContainer extends Component {
       selectAlbum: this.selectAlbum,
       selectArtist: this.selectArtist,
       currentSongList: this.currentSongList,
-      addPlaylist: this.addPlaylist
+      addPlaylist: this.addPlaylist,
+      selectPlaylist: this.selectPlaylist
     });
 
     return (
       <div id="main" className="container-fluid">
         <div className="col-xs-2">
-          <Sidebar />
+          <Sidebar 
+            playlistArray={this.state.playlistArray}
+            selectPlaylist={this.selectPlaylist}
+          />
         </div>
         <div className="col-xs-10">
         {
