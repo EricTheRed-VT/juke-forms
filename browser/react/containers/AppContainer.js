@@ -150,6 +150,12 @@ export default class AppContainer extends Component {
       });
   }
 
+  addSongToPlaylist (song) {
+    const index = this.state.playlistArray.indexOf(this.state.selectedPlaylist)
+    const playlist = this.state.selectedPlaylist.songs.concat(song)
+    this.setState({playlistArray[index]: playlist})
+  }
+
   render () {
 
     const props = Object.assign({}, this.state, {
@@ -159,7 +165,8 @@ export default class AppContainer extends Component {
       selectArtist: this.selectArtist,
       currentSongList: this.currentSongList,
       addPlaylist: this.addPlaylist,
-      selectPlaylist: this.selectPlaylist
+      selectPlaylist: this.selectPlaylist,
+      addSongToPlaylist: this.addSongToPlaylist
     });
 
     return (

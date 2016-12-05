@@ -50,7 +50,6 @@ class NewPlaylistContainer extends React.Component {
 
 		});
 		this.validateInput(val);
-		// if (this.state.submitButtonDisabled && this.state.inputChanged) this.setState({ showAlert: true }) 
 	}
 
 	handleSubmit(event) {

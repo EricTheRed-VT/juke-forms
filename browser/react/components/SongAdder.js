@@ -9,7 +9,7 @@ const SongAdder = (props) => {
 		      <div className="form-group">
 		        <label htmlFor="song" className="col-xs-2 control-label">Song</label>
 		        <div className="col-xs-10">
-		          <select className="form-control" name="song">
+		          <select className="form-control" name="song" onChange={props.handleChange}>
 		          	{ props.songs.map((song)=> {
 		          	return (<option value={song.id} key={song.id}>{song.name}</option>)
 		          	}) }
