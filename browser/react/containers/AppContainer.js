@@ -23,6 +23,7 @@ export default class AppContainer extends Component {
     this.prev = this.prev.bind(this);
     this.selectAlbum = this.selectAlbum.bind(this);
     this.selectArtist = this.selectArtist.bind(this);
+    this.addPlaylist = this.addPlaylist.bind(this);
   }
 
   componentDidMount () {
@@ -124,13 +125,21 @@ export default class AppContainer extends Component {
     this.setState({ selectedArtist: artist });
   }
 
+  addPlaylist (playlist) {
+    this.setState({
+      playlistArray: this.state.playlistArray.concat(playlist)
+    }
+  )}
+
   render () {
 
     const props = Object.assign({}, this.state, {
       toggleOne: this.toggleOne,
       toggle: this.toggle,
       selectAlbum: this.selectAlbum,
-      selectArtist: this.selectArtist
+      selectArtist: this.selectArtist,
+      currentSongList: this.currentSongList,
+      addPlaylist: this.addPlaylist
     });
 
     return (
